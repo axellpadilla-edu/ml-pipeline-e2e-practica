@@ -15,12 +15,18 @@ def main() -> None:
             f"No se encontró el dataset en {DATA_PATH}. Asegúrate de sincronizar los datos."
         )
 
-    df = pd.read_csv(DATA_PATH, parse_dates=["datetime"])
-    df["hour"] = df["datetime"].dt.hour
-    df["is_weekend"] = df["datetime"].dt.dayofweek >= 5
+    df = pd.read_csv(DATA_PATH, parse_dates=["timestamp"])
+    # Convertir timestamp a datetime si no lo es
+    df['timestamp'] = pd.to_datetime(df['timestamp'], dayfirst=True, errors='coerce')
+    df["hour"] = df["timestamp"].dt.hour
+    df["is_weekend"] = df["timestamp"].dt.dayofweek >= 5
+
+    # Manejar valores faltantes
+    df = df.dropna(subset=["temp", "humidity", "windspeed", "demand"])
+    df = df.dropna(subset=["timestamp"])
 
     features = ["temp", "humidity", "windspeed", "hour", "is_weekend"]
-    target = "count"
+    target = "demand"
 
     X = df[features]
     y = df[target]
