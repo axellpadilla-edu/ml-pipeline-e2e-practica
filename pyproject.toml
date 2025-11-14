@@ -1,5 +1,9 @@
+[build-system]
+requires = ["uv-build"]
+build-backend = "uv_build"
+
 [project]
-name = "demo-features-leakaje"
+name = "ml-pipeline-e2e-practica"
 version = "0.1.0"
 description = "Taller de Data Science seguro contra data leakage"
 readme = "README.md"
@@ -9,4 +13,5 @@ dependencies = [
 	"scikit-learn",
 	"numpy",
 	"jupyter",
+	"matplotlib",
 ]

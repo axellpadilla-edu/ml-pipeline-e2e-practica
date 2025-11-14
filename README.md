@@ -24,6 +24,16 @@ Usa `uv run` para mantener un entorno reproducible:
 uv run src/seguridad_pipeline.py
 ```
 
+#### Experimentos adicionales
+
+```bash
+# Para ejecutar el experimento de Regresión
+uv run src/train_regression.py
+
+# Para ejecutar el experimento de Clasificación
+uv run src/train_classification.py
+```
+
 ### 4. Estructura principal
 
 ```
