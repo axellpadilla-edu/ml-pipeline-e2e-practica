@@ -1,0 +1,12 @@
+[project]
+name = "demo-features-leakaje"
+version = "0.1.0"
+description = "Taller de Data Science seguro contra data leakage"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+	"pandas",
+	"scikit-learn",
+	"numpy",
+	"jupyter",
+]
