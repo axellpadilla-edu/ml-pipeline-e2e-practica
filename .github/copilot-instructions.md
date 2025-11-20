@@ -24,7 +24,7 @@ Este proyecto es un taller práctico de Data Science enfocado en prevenir fugas 
 ## Dependencias y Integraciones
 - **Herramientas**: `uv` para gestión de dependencias (Python ≥3.14), no uses `pip` directamente.
 - **Librerías clave**: `pandas` para manipulación, `scikit-learn` para preprocessing/ML, `numpy` para arrays.
-- **Datos**: Dataset local en `data/`; no hay APIs externas ni bases de datos.
+- **Datos**: Datos originales en `data/`, datos cacheables o generados (recopilables desde el origen) en `.cache/`; si hay APIs externas ni bases de datos.
 
 ## Ejemplos de Patrones
 - Para features temporales: `df['hour'] = df['timestamp'].dt.hour` (ver `seguridad_pipeline.py` o `preprocesamiento_seguro.py`).
