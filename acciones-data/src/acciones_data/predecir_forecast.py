@@ -120,7 +120,7 @@ def main() -> None:
         / ".cache"
         / "modelos"
         / "acciones"
-        / "best_model_template.json"
+        / "best_model_template.csv"
     )
     directorio_salida = ruta_proyecto_raiz / ".cache" / "predicciones" / "acciones"
 

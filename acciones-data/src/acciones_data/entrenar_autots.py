@@ -113,7 +113,8 @@ def guardar_modelo(model: AutoTS, directorio_destino: Path) -> None:
 
     # 2. Exportar plantilla (best practice para producción/reproducibilidad)
     # Permite re-entrenar solo los mejores modelos en el futuro o en otro entorno
-    ruta_template = directorio_destino / "best_model_template.json"
+    # Usamos .csv porque .json requiere índices únicos que AutoTS no siempre garantiza en el template
+    ruta_template = directorio_destino / "best_model_template.csv"
     model.export_template(
         str(ruta_template),
         models="best",

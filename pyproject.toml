@@ -12,11 +12,15 @@ dependencies = [
 	"pandas",
 	"scikit-learn",
 	"numpy",
-	"jupyter",
-	"matplotlib",
-	"acciones-data", # Opcional o ejecutar uv sync dentro del directorio del proyecto
+	"acciones-data", # Opcional o ejecutar uv sync --directory acciones-data
 ]
 
+[dependency-groups]
+dev = [
+    "seaborn>=0.13.2",
+	"jupyter",
+	"matplotlib",
+]
 
 [tool.uv.workspace]
 members = [
