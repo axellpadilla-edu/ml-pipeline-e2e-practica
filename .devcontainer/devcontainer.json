@@ -5,21 +5,26 @@
     "context": ".."
   },
   "remoteUser": "vscode",
-  "containerEnv": {
-    "UV_PYTHON": "/usr/local/bin/python3.14"
-  },
   "updateContentCommand": "uv sync",
   "postCreateCommand": "uv sync",
   "customizations": {
     "vscode": {
       "settings": {
-        "python.defaultInterpreterPath": "/usr/local/bin/python3.14",
+        "python.defaultInterpreterPath": ".venv/bin/python",
         "terminal.integrated.defaultProfile.linux": "zsh",
-        "jupyter.notebookFileRoot": "${workspaceFolder}"
+        "jupyter.notebookFileRoot": "${workspaceFolder}",
+        "files.autoSave": "afterDelay",
+        "files.autoSaveDelay": 1000,
+        "[python]": {
+          "editor.defaultFormatter": "charliermarsh.ruff",
+          "editor.formatOnSave": true
+        }
       },
       "extensions": [
         "ms-python.python",
-        "ms-toolsai.jupyter"
+        "ms-toolsai.jupyter",
+        "charliermarsh.ruff",
+        "-ms-python.autopep8"
       ]
     }
   },

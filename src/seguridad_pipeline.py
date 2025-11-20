@@ -17,7 +17,7 @@ def main() -> None:
 
     df = pd.read_csv(DATA_PATH, parse_dates=["timestamp"])
     # Convertir timestamp a datetime si no lo es
-    df['timestamp'] = pd.to_datetime(df['timestamp'], dayfirst=True, errors='coerce')
+    df["timestamp"] = pd.to_datetime(df["timestamp"], dayfirst=True, errors="coerce")
     df["hour"] = df["timestamp"].dt.hour
     df["is_weekend"] = df["timestamp"].dt.dayofweek >= 5
 
@@ -47,7 +47,7 @@ def main() -> None:
     print(f"- Test shape: {X_test.shape}")
     print(f"- Media entrenamiento (primer feature): {X_train_scaled[:, 0].mean():.3f}")
     print(f"- Media prueba (primer feature): {X_test_scaled[:, 0].mean():.3f}")
-    print("El scaler solo " "vio" " el set de entrenamiento, evitando fugas de información.")
+    print("El scaler solo vio el set de entrenamiento, evitando fugas de información.")
 
 
 if __name__ == "__main__":

@@ -14,4 +14,18 @@ dependencies = [
 	"numpy",
 	"jupyter",
 	"matplotlib",
+	"acciones-data", # Opcional o ejecutar uv sync dentro del directorio del proyecto
 ]
+
+
+[tool.uv.workspace]
+members = [
+    "acciones-data", # Necesario para considerarlo parte del workspace y usar el mismo .venv
+]
+
+[tool.uv.sources]
+"acciones-data" = { workspace = true } # Necesario para poder instalar al añadir a dependencias
+
+[tool.pyright]
+pythonPath = ".venv/bin/python"
+typeCheckingMode = "standard"

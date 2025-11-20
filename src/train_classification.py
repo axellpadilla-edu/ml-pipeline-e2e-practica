@@ -6,7 +6,10 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 from sklearn.neighbors import KNeighborsClassifier
 
-from ml_pipeline_e2e_practica.preprocesamiento_seguro import cargar_dataframe_limpio, preparar_matrices
+from ml_pipeline_e2e_practica.preprocesamiento_seguro import (
+    cargar_dataframe_limpio,
+    preparar_matrices,
+)
 
 
 def comparar_modelos_clasificacion() -> None:
@@ -14,7 +17,9 @@ def comparar_modelos_clasificacion() -> None:
     mediana = df["demand"].median()
     df["is_high_demand"] = (df["demand"] > mediana).astype(int)
 
-    X_train, X_test, y_train, y_test = preparar_matrices(df, target_col="is_high_demand")
+    X_train, X_test, y_train, y_test = preparar_matrices(
+        df, target_col="is_high_demand"
+    )
 
     modelos = {
         "LogisticRegression": LogisticRegression(max_iter=1000),

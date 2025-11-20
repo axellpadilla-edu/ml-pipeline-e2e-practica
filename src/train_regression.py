@@ -6,7 +6,10 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 from sklearn.tree import DecisionTreeRegressor
 
-from ml_pipeline_e2e_practica.preprocesamiento_seguro import cargar_dataframe_limpio, preparar_matrices
+from ml_pipeline_e2e_practica.preprocesamiento_seguro import (
+    cargar_dataframe_limpio,
+    preparar_matrices,
+)
 
 
 def comparar_modelos_regresion() -> None:

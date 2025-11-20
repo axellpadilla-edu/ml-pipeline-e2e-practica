@@ -10,7 +10,9 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-DATA_PATH = Path(__file__).resolve().parent.parent.parent / "data" / "bike_sharing_demand.csv"
+DATA_PATH = (
+    Path(__file__).resolve().parent.parent.parent / "data" / "bike_sharing_demand.csv"
+)
 FEATURES = ["temp", "humidity", "windspeed", "hour", "is_weekend"]
 TARGET = "demand"
 
