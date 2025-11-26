@@ -1,62 +1,56 @@
-"""Script para descargar datos de precios de acciones de tecnología usando yfinance."""
+"""Script para descargar datos de precios de acciones usando yfinance."""
 
 from pathlib import Path
 import yfinance as yf
+from acciones_data.configurar_forecast import obtener_configuracion_sectores
 
 
-def descargar_datos_acciones(directorio_destino: Path) -> None:
+def descargar_datos_sector(sector: str, tickers: list, directorio_base: Path) -> None:
     """
-    Descarga los precios de cierre de acciones de tecnología usando yfinance.
+    Descarga los precios de cierre para un sector específico.
 
     Args:
-        directorio_destino: Ruta donde guardar el archivo CSV descargado
-
-    Raises:
-        RuntimeError: Si la descarga falla
+        sector: Nombre del sector (ej. 'tecnologia', 'consumo')
+        tickers: Lista de símbolos de acciones
+        directorio_base: Ruta base donde guardar los datos (.cache/cargados)
     """
+    directorio_destino = directorio_base / sector
     directorio_destino.mkdir(parents=True, exist_ok=True)
 
-    # 1. Definir los "productos" (5 acciones de tecnología)
-    tickers_productos = ["TSLA", "MSFT", "GOOGL", "AMZN", "NVDA"]
-
-    print("Descargando precios de cierre de acciones de tecnología...")
-    print(f"Tickers: {tickers_productos}")
+    print(f"\nDescargando sector: {sector.upper()}")
+    print(f"Tickers: {tickers}")
     print(f"Destino: {directorio_destino}")
 
     try:
-        # 2. Descargar el precio de CIERRE de los últimos 5 años
-        posible_df = yf.download(tickers_productos, period="5y")
+        # Descargar el precio de CIERRE de los últimos 5 años
+        posible_df = yf.download(tickers, period="5y")
         if posible_df is None or posible_df.empty:
-            raise RuntimeError("No se descargaron datos; el DataFrame está vacío.")
+            raise RuntimeError(f"No se descargaron datos para {sector}")
         df_productos = posible_df["Close"]
     except Exception as e:
-        raise RuntimeError(f"Error durante la descarga desde Yahoo Finance: {e}") from e
+        raise RuntimeError(f"Error descargando {sector}: {e}") from e
 
     # Guardar a CSV
-    archivo_csv = directorio_destino / "precios_cierre_acciones.csv"
+    archivo_csv = directorio_destino / f"precios_{sector}.csv"
     df_productos.to_csv(archivo_csv)
 
-    print("\n✓ Descarga completada exitosamente")
-    print(f"  Archivo guardado: {archivo_csv}")
-    print(
-        f"  Dimensiones: {df_productos.shape[0]} filas, {df_productos.shape[1]} columnas"
-    )
-    print("Período: últimos 5 años")
-    print(
-        f"  Datos desde: {df_productos.index.min()} hasta: {df_productos.index.max()}"
-    )
+    print(f"✓ Descarga de {sector} completada.")
+    print(f"  Archivo: {archivo_csv}")
+    print(f"  Dimensiones: {df_productos.shape}")
 
 
 def main() -> None:
     """Punto de entrada principal."""
-    # Obtener ruta raíz del proyecto principal
     ruta_proyecto_raiz = Path(__file__).resolve().parent.parent.parent.parent
-    directorio_destino = ruta_proyecto_raiz / ".cache" / "cargados" / "acciones"
+    directorio_base = ruta_proyecto_raiz / ".cache" / "cargados"
 
     print(f"Proyecto raíz: {ruta_proyecto_raiz}")
-    print(f"Directorio de destino: {directorio_destino}\n")
+    print(f"Directorio base: {directorio_base}\n")
 
-    descargar_datos_acciones(directorio_destino)
+    sectores = obtener_configuracion_sectores()
+
+    for sector, tickers in sectores.items():
+        descargar_datos_sector(sector, tickers, directorio_base)
 
 
 if __name__ == "__main__":

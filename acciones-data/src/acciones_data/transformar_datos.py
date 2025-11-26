@@ -78,16 +78,21 @@ def asegurar_formato_autots(df: pd.DataFrame) -> pd.DataFrame:
     return df_autots
 
 
-def guardar_datos_transformados(df: pd.DataFrame, directorio_destino: Path) -> None:
+def guardar_datos_transformados(
+    df: pd.DataFrame,
+    directorio_destino: Path,
+    nombre_archivo: str = "precios_cierre_acciones_transformado.csv",
+) -> None:
     """
     Guarda el DataFrame transformado en un CSV.
 
     Args:
         df: DataFrame a guardar.
         directorio_destino: Directorio donde guardar.
+        nombre_archivo: Nombre del archivo CSV.
     """
     directorio_destino.mkdir(parents=True, exist_ok=True)
-    archivo_csv = directorio_destino / "precios_cierre_acciones_transformado.csv"
+    archivo_csv = directorio_destino / nombre_archivo
 
     try:
         df.to_csv(archivo_csv)
@@ -97,33 +102,40 @@ def guardar_datos_transformados(df: pd.DataFrame, directorio_destino: Path) -> N
         raise
 
 
+from acciones_data.configurar_forecast import obtener_configuracion_sectores
+
+
+def procesar_sector(sector: str, ruta_raiz: Path) -> None:
+    """Procesa un sector específico."""
+    ruta_csv = ruta_raiz / ".cache" / "cargados" / sector / f"precios_{sector}.csv"
+    directorio_destino = ruta_raiz / ".cache" / "transformados" / sector
+
+    print(f"\nProcesando sector: {sector}")
+    print(f"Fuente: {ruta_csv}")
+
+    if not ruta_csv.exists():
+        print(f"⚠️ Archivo no encontrado: {ruta_csv}")
+        return
+
+    # 1. Cargar
+    df = cargar_datos_acciones(ruta_csv)
+    # 2. Validar
+    df_autots = asegurar_formato_autots(df)
+    # 3. Guardar
+    nombre_archivo = f"precios_{sector}_transformado.csv"
+    guardar_datos_transformados(df_autots, directorio_destino, nombre_archivo)
+    print(f"✓ Transformación de {sector} completada.")
+
+
 def main() -> None:
     """Punto de entrada principal."""
-    # Configuración de rutas
     ruta_proyecto_raiz = Path(__file__).resolve().parent.parent.parent.parent
-    ruta_csv = (
-        ruta_proyecto_raiz
-        / ".cache"
-        / "cargados"
-        / "acciones"
-        / "precios_cierre_acciones.csv"
-    )
-    directorio_destino = ruta_proyecto_raiz / ".cache" / "transformados" / "acciones"
+    print(f"Proyecto raíz: {ruta_proyecto_raiz}\n")
 
-    print(f"Proyecto raíz: {ruta_proyecto_raiz}")
-    print(f"Archivo fuente: {ruta_csv}")
-    print(f"Directorio destino: {directorio_destino}\n")
+    sectores = obtener_configuracion_sectores()
 
-    # 1. Cargar datos originales
-    df = cargar_datos_acciones(ruta_csv)
-
-    # 2. Validación de formato (Sin agregar features técnicas complejas)
-    df_autots = asegurar_formato_autots(df)
-
-    # 3. Guardar resultado
-    guardar_datos_transformados(df_autots, directorio_destino)
-
-    print("\n✓ Transformación completada exitosamente")
+    for sector in sectores:
+        procesar_sector(sector, ruta_proyecto_raiz)
 
 
 if __name__ == "__main__":

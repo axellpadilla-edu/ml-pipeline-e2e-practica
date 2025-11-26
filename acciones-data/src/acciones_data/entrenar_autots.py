@@ -124,42 +124,53 @@ def guardar_modelo(model: AutoTS, directorio_destino: Path) -> None:
     print(f"Plantilla del mejor modelo exportada a: {ruta_template}")
 
 
-def main() -> None:
-    """Punto de entrada principal."""
-    # Obtener ruta raíz del proyecto principal
-    ruta_proyecto_raiz = Path(__file__).resolve().parent.parent.parent.parent
+from acciones_data.configurar_forecast import obtener_configuracion_sectores
+
+
+def entrenar_sector(sector: str, ruta_raiz: Path) -> None:
+    """Entrena modelo para un sector específico."""
     ruta_csv = (
-        ruta_proyecto_raiz
+        ruta_raiz
         / ".cache"
         / "transformados"
-        / "acciones"
-        / "precios_cierre_acciones_transformado.csv"
+        / sector
+        / f"precios_{sector}_transformado.csv"
     )
-    directorio_modelo = ruta_proyecto_raiz / ".cache" / "modelos" / "acciones"
+    directorio_modelo = ruta_raiz / ".cache" / "modelos" / sector
 
-    print(f"Proyecto raíz: {ruta_proyecto_raiz}")
-    print(f"Archivo de datos transformados: {ruta_csv}")
-    print(f"Directorio para guardar modelo: {directorio_modelo}\n")
+    print(f"\n{'=' * 40}")
+    print(f"ENTRENANDO SECTOR: {sector.upper()}")
+    print(f"{'=' * 40}")
 
-    # Cargar datos transformados
+    if not ruta_csv.exists():
+        print(f"⚠️ Archivo no encontrado: {ruta_csv}")
+        return
+
+    # Cargar datos
     df = cargar_datos_transformados(ruta_csv)
 
-    # Obtener configuración centralizada
+    # Configuración
     configuracion = definir_configuracion_forecast()
 
-    # Inicializar AutoTS con la configuración
+    # Inicializar y Entrenar
     model = inicializar_autots(configuracion, df)
-
-    # Entrenar modelo
     model_entrenado = entrenar_modelo(model, df)
 
-    # Mostrar resultados
+    # Resultados y Guardado
     mostrar_resultados(model_entrenado)
-
-    # Guardar modelo
     guardar_modelo(model_entrenado, directorio_modelo)
+    print(f"✓ Entrenamiento de {sector} completado.")
 
-    print("\n✓ Fase de ejecución completada exitosamente")
+
+def main() -> None:
+    """Punto de entrada principal."""
+    ruta_proyecto_raiz = Path(__file__).resolve().parent.parent.parent.parent
+    print(f"Proyecto raíz: {ruta_proyecto_raiz}\n")
+
+    sectores = obtener_configuracion_sectores()
+
+    for sector in sectores:
+        entrenar_sector(sector, ruta_proyecto_raiz)
 
 
 if __name__ == "__main__":

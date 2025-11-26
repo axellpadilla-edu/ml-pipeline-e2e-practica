@@ -100,6 +100,17 @@ def inicializar_autots(configuracion: dict, df: pd.DataFrame) -> AutoTS:
     return model
 
 
+def obtener_configuracion_sectores() -> dict:
+    """
+    Define los sectores y sus tickers correspondientes.
+    Simula un registro de metadatos de negocio.
+    """
+    return {
+        "tecnologia": ["TSLA", "MSFT", "GOOGL", "AMZN", "NVDA"],
+        "consumo": ["KO", "PEP", "MCD", "WMT", "PG"],
+    }
+
+
 def main() -> None:
     """Punto de entrada principal."""
     # Obtener ruta raíz del proyecto principal

@@ -15,6 +15,7 @@ import sys
 import time
 from acciones_data import descargar_datos
 from acciones_data import transformar_datos
+from acciones_data import monitoreo_drift
 from acciones_data import entrenar_autots
 from acciones_data import predecir_forecast
 
@@ -55,17 +56,21 @@ def main():
     # Prepara los datos para AutoTS (formato Wide, limpieza básica)
     ejecutar_paso("2. Transformación y Preparación de Datos", transformar_datos.main)
 
-    # Paso 3: Entrenamiento
+    # Paso 3: Monitoreo
+    # Verifica si hay Data Drift antes de continuar
+    ejecutar_paso("3. Monitoreo de Data Drift", monitoreo_drift.main)
+
+    # Paso 4: Entrenamiento
     # Entrena modelos (o actualiza el template) con los datos transformados.
     # Genera 'best_model_template.json'
     ejecutar_paso(
-        "3. Entrenamiento y Generación de Template (AutoTS)", entrenar_autots.main
+        "4. Entrenamiento y Generación de Template (AutoTS)", entrenar_autots.main
     )
 
-    # Paso 4: Predicción
+    # Paso 5: Predicción
     # Usa el template generado para predecir el futuro sin re-entrenar desde cero.
     ejecutar_paso(
-        "4. Generación de Pronóstico (Inferencia Producción)", predecir_forecast.main
+        "5. Generación de Pronóstico (Inferencia Producción)", predecir_forecast.main
     )
 
     total_elapsed = time.time() - total_start_time

@@ -96,6 +96,82 @@ def generar_pronostico(
     return forecasts_df
 
 
+from acciones_data.configurar_forecast import obtener_configuracion_sectores
+
+
+def identificar_sector(df: pd.DataFrame) -> str:
+    """
+    Identifica el sector basado en los tickers presentes en el DataFrame.
+    Simula un 'Model Router' inteligente.
+    """
+    sectores = obtener_configuracion_sectores()
+    columnas = set(df.columns)
+
+    for sector, tickers in sectores.items():
+        # Si hay intersección significativa entre las columnas y los tickers del sector
+        if set(tickers).intersection(columnas):
+            return sector
+
+    return "desconocido"
+
+
+def predecir_sector(sector: str, ruta_raiz: Path) -> None:
+    """Ejecuta la predicción para un sector específico."""
+    ruta_datos = (
+        ruta_raiz
+        / ".cache"
+        / "transformados"
+        / sector
+        / f"precios_{sector}_transformado.csv"
+    )
+    ruta_template = (
+        ruta_raiz / ".cache" / "modelos" / sector / "best_model_template.csv"
+    )
+    directorio_salida = ruta_raiz / ".cache" / "predicciones" / sector
+
+    print(f"\n{'=' * 40}")
+    print(f"PREDICIENDO SECTOR: {sector.upper()}")
+    print(f"{'=' * 40}")
+
+    if not ruta_datos.exists():
+        print(f"⚠️ Datos no encontrados: {ruta_datos}")
+        return
+
+    # 1. Cargar datos
+    df = cargar_datos_transformados(ruta_datos)
+
+    # 2. Validar sector (Simulación de Router)
+    sector_detectado = identificar_sector(df)
+    print(
+        f"🔍 Router: Analizando datos... Sector detectado: '{sector_detectado.upper()}'"
+    )
+
+    if sector_detectado != sector:
+        print(
+            f"⚠️ Mismatch: Se esperaban datos de {sector} pero parecen ser de {sector_detectado}"
+        )
+
+    # 3. Configuración
+    config = definir_configuracion_forecast()
+    forecast_length = config["forecast_length"]
+
+    # 4. Generar pronóstico
+    try:
+        ruta_template_str = cargar_template(ruta_template)
+        df_forecast = generar_pronostico(df, ruta_template_str, forecast_length)
+
+        # 5. Mostrar y guardar
+        print("\nPrimeras 5 filas del pronóstico:")
+        print(df_forecast.head())
+        guardar_pronostico(df_forecast, directorio_salida)
+
+    except FileNotFoundError as e:
+        print(f"\nError: {e}")
+        print("Por favor, ejecuta primero el script de entrenamiento.")
+    except Exception as e:
+        print(f"\nError inesperado: {e}")
+
+
 def guardar_pronostico(df_forecast: pd.DataFrame, directorio_destino: Path) -> None:
     """Guarda el pronóstico en CSV."""
     directorio_destino.mkdir(parents=True, exist_ok=True)
@@ -106,48 +182,15 @@ def guardar_pronostico(df_forecast: pd.DataFrame, directorio_destino: Path) -> N
 
 def main() -> None:
     """Flujo principal de predicción."""
-    # Rutas
     ruta_proyecto_raiz = Path(__file__).resolve().parent.parent.parent.parent
-    ruta_datos = (
-        ruta_proyecto_raiz
-        / ".cache"
-        / "transformados"
-        / "acciones"
-        / "precios_cierre_acciones_transformado.csv"
-    )
-    ruta_template = (
-        ruta_proyecto_raiz
-        / ".cache"
-        / "modelos"
-        / "acciones"
-        / "best_model_template.csv"
-    )
-    directorio_salida = ruta_proyecto_raiz / ".cache" / "predicciones" / "acciones"
+    print(f"Proyecto raíz: {ruta_proyecto_raiz}\n")
 
-    # 1. Cargar datos
-    df = cargar_datos_transformados(ruta_datos)
+    sectores = obtener_configuracion_sectores()
 
-    # 2. Obtener configuración (solo para saber el forecast_length original si se desea)
-    config = definir_configuracion_forecast()
-    forecast_length = config["forecast_length"]
-
-    # 3. Generar pronóstico
-    try:
-        ruta_template_str = cargar_template(ruta_template)
-        df_forecast = generar_pronostico(df, ruta_template_str, forecast_length)
-
-        # 4. Mostrar y guardar
-        print("\nPrimeras 5 filas del pronóstico:")
-        print(df_forecast.head())
-        guardar_pronostico(df_forecast, directorio_salida)
-
-    except FileNotFoundError as e:
-        print(f"\nError: {e}")
-        print(
-            "Por favor, ejecuta primero el script de entrenamiento para generar el template."
-        )
-    except Exception as e:
-        print(f"\nError inesperado: {e}")
+    # En un sistema real, esto sería una API recibiendo una solicitud.
+    # Aquí iteramos para demostrar que funciona para ambos.
+    for sector in sectores:
+        predecir_sector(sector, ruta_proyecto_raiz)
 
 
 if __name__ == "__main__":
