@@ -26,6 +26,24 @@ Este proyecto es un taller práctico de Data Science enfocado en prevenir fugas 
 - **Librerías clave**: `pandas` para manipulación, `scikit-learn` para preprocessing/ML, `numpy` para arrays.
 - **Datos**: Datos originales en `data/`, datos cacheables o generados (recopilables desde el origen) en `.cache/`; si hay APIs externas ni bases de datos.
 
+## Proyecto MLOps (Acciones Data)
+Este módulo (`acciones-data`) enseña Tracking, Despliegue y Monitoreo.
+
+### Arquitectura MLOps
+- **Orquestador**: `acciones-data/src/acciones_data/pipeline_completo.py` coordina todo el flujo.
+- **Datos**: NO usa `data/`. Usa `.cache/` para simular Data Lake (Raw/Silver) y Model Registry.
+- **Sectores**: El sistema maneja múltiples contextos (`tecnologia`, `consumo`) dinámicamente.
+
+### Patrones MLOps Implementados
+1.  **Monitoring (Gatekeeper)**: `monitoreo_drift.py` verifica estadísticas antes de entrenar/predecir. Si hay drift (>20%), alerta.
+2.  **Model Registry (Simulado)**: `entrenar_autots.py` guarda `best_model_template.csv` en `.cache/modelos/{sector}/`.
+3.  **Model Routing**: `predecir_forecast.py` detecta el sector de los datos entrantes y carga el template correspondiente automáticamente.
+4.  **Configuración Centralizada**: `configurar_forecast.py` define métricas y sectores.
+
+### Comandos MLOps
+- Ejecutar pipeline completo: `uv run acciones-data/src/acciones_data/pipeline_completo.py`
+- Verificar drift manualmente: `uv run acciones-data/src/acciones_data/monitoreo_drift.py`
+
 ## Ejemplos de Patrones
 - Para features temporales: `df['hour'] = df['timestamp'].dt.hour` (ver `seguridad_pipeline.py` o `preprocesamiento_seguro.py`).
 - Para split: `train_test_split(X, y, test_size=0.2, random_state=42)` (línea 27 en `seguridad_pipeline.py` o en `preparar_matrices`).

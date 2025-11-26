@@ -72,3 +72,34 @@ Abre `notebooks/demo_comparativa_modelos.ipynb` para ver una comparación práct
 ---
 
 > **Nota:** El archivo `data/bike_sharing_demand.csv` contiene una muestra reducida del dataset original disponible públicamente en Kaggle. Inclúyelo únicamente para fines educativos durante el taller.
+
+---
+
+## Taller: MLOps con Forecasting de Acciones
+
+Este repositorio incluye un segundo módulo (`acciones-data`) diseñado para enseñar conceptos de **MLOps** (Machine Learning Operations) aplicados a un problema de series temporales financieras.
+
+### 1. Conceptos Clave
+- **Tracking**: Registro de experimentos y modelos ganadores usando AutoTS.
+- **Model Registry (Simulado)**: Almacenamiento versionado de artefactos (templates) en `.cache/modelos`.
+- **Despliegue & Routing**: Inferencia condicional que selecciona el modelo adecuado según el sector (Tecnología vs. Consumo).
+- **Monitoreo**: Detección de *Data Drift* antes de permitir la ejecución del pipeline.
+
+### 2. Ejecución del Pipeline MLOps
+
+El pipeline completo orquesta la descarga, transformación, monitoreo, entrenamiento e inferencia.
+
+```bash
+uv run acciones-data/src/acciones_data/pipeline_completo.py
+```
+
+### 3. Estructura de Datos (Simulación Data Lake)
+A diferencia del demo de Bike Sharing, este pipeline **no usa la carpeta `data/`**. Simula un entorno productivo usando `.cache/` como almacenamiento temporal/externo:
+
+- `.cache/cargados/`: Datos crudos (Raw).
+- `.cache/transformados/`: Datos procesados (Silver).
+- `.cache/modelos/`: Artefactos de modelos (Registry).
+- `.cache/predicciones/`: Resultados finales.
+
+### 4. Presentación
+Consulta `MLOps_Presentation.md` para la guía teórica y el walkthrough del taller.
