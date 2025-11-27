@@ -34,6 +34,26 @@ uv run src/train_regression.py
 uv run src/train_classification.py
 ```
 
+### 4. Pipeline independiente de anonimización (nuevo demo)
+
+El script `src/pipeline_anonimizacion.py` está pensado para la práctica **Anonimización de Datos (30 min)**. Ejecuta:
+
+```bash
+uv run src/pipeline_anonimizacion.py
+```
+
+Pasos que se realizan en vivo:
+
+1. **Generación de datos ficticios** con [Faker](https://faker.readthedocs.io/) (IDs, documento nacional, dirección detallada, asesor, monto, etc.).
+2. **Enriquecimiento temporal** (`mes`, `anio`, `es_fin_de_semana`) sin duplicar lógica entre scripts.
+3. **Anonimización en tres capas**, únicamente con el paquete interno `anonimizar-datos`:
+    - Hash SHA-256 (irreversible) para `cliente_id`.
+    - Enmascarado parcial para `documento_nacional`.
+    - Tokenización reversible para `direccion_detallada` y `asesor_venta`, guardando los diccionarios en `.cache/anonimizacion/tokenizacion.json`.
+4. **Evidencia reproducible**: se guardan los CSV `dataset_original.csv` y `dataset_anonimo.csv` en `.cache/anonimizacion/` para comparar antes/después en demos o notebooks.
+
+> Este pipeline no depende de archivos en `data/`; todos los registros se generan al vuelo, permitiendo explicar por qué la anonimización debe suceder antes de compartir los datos.
+
 ### 4. Estructura principal
 
 ```
@@ -45,6 +65,7 @@ uv run src/train_classification.py
 │   └── bike_sharing_demand.csv      # Muestra ligera del dataset público de Bike Sharing Demand
 ├── src/
 │   ├── seguridad_pipeline.py        # Script principal que aplica la regla "Divide antes, transforma después"
+│   ├── pipeline_anonimizacion.py    # Crea datos sintéticos (Faker) y aplica hashing/masking/tokenización
 │   ├── train_regression.py          # Experimento de regresión para predicción de demanda
 │   ├── train_classification.py      # Experimento de clasificación (ej. demanda alta/baja)
 │   └── ml_pipeline_e2e_practica/

@@ -5,6 +5,7 @@ requires-python = ">=3.14"
 [manifest]
 members = [
     "acciones-data",
+    "anonimizar-datos",
     "ml-pipeline-e2e-practica",
 ]
 
@@ -26,6 +27,17 @@ requires-dist = [
     { name = "pandas", specifier = ">=2.0" },
     { name = "yfinance", specifier = ">=0.2.0" },
 ]
+
+[[package]]
+name = "anonimizar-datos"
+version = "0.1.0"
+source = { editable = "anonimizar-datos" }
+dependencies = [
+    { name = "pandas" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "pandas" }]
 
 [[package]]
 name = "anyio"
@@ -372,6 +384,18 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/cc/28/c14e053b6762b1044f34a13aab6859bbf40456d37d23aa286ac24cfd9a5d/executing-2.2.1.tar.gz", hash = "sha256:3632cc370565f6648cc328b32435bd120a1e4ebb20c77e3fdde9a13cd1e533c4", size = 1129488, upload-time = "2025-09-01T09:48:10.866Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/c1/ea/53f2148663b321f21b5a606bd5f191517cf40b7072c0497d3c92c4a13b1e/executing-2.2.1-py2.py3-none-any.whl", hash = "sha256:760643d3452b4d777d295bb167ccc74c64a81df23fb5e08eff250c425a4b2017", size = 28317, upload-time = "2025-09-01T09:48:08.5Z" },
+]
+
+[[package]]
+name = "faker"
+version = "38.2.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "tzdata" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/64/27/022d4dbd4c20567b4c294f79a133cc2f05240ea61e0d515ead18c995c249/faker-38.2.0.tar.gz", hash = "sha256:20672803db9c7cb97f9b56c18c54b915b6f1d8991f63d1d673642dc43f5ce7ab", size = 1941469, upload-time = "2025-11-19T16:37:31.892Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/17/93/00c94d45f55c336434a15f98d906387e87ce28f9918e4444829a8fda432d/faker-38.2.0-py3-none-any.whl", hash = "sha256:35fe4a0a79dee0dc4103a6083ee9224941e7d3594811a50e3969e547b0d2ee65", size = 1980505, upload-time = "2025-11-19T16:37:30.208Z" },
 ]
 
 [[package]]
@@ -979,6 +1003,8 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "acciones-data" },
+    { name = "anonimizar-datos" },
+    { name = "faker" },
     { name = "numpy" },
     { name = "pandas" },
     { name = "scikit-learn" },
@@ -994,6 +1020,8 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "acciones-data", editable = "acciones-data" },
+    { name = "anonimizar-datos", editable = "anonimizar-datos" },
+    { name = "faker" },
     { name = "numpy" },
     { name = "pandas" },
     { name = "scikit-learn" },

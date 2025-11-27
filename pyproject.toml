@@ -10,9 +10,11 @@ readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
 	"pandas",
+	"faker",
 	"scikit-learn",
 	"numpy",
 	"acciones-data", # Opcional o ejecutar uv sync --directory acciones-data
+	"anonimizar-datos", # Opcional o ejecutar uv sync --directory anonimizar-datos
 ]
 
 [dependency-groups]
@@ -24,11 +26,13 @@ dev = [
 
 [tool.uv.workspace]
 members = [
-    "acciones-data", # Necesario para considerarlo parte del workspace y usar el mismo .venv
+    "acciones-data",
+    "anonimizar-datos", # Necesario para considerarlo parte del workspace y usar el mismo .venv
 ]
 
 [tool.uv.sources]
 "acciones-data" = { workspace = true } # Necesario para poder instalar al añadir a dependencias
+"anonimizar-datos" = { workspace = true } # Necesario para poder instalar al añadir a dependencias
 
 [tool.pyright]
 pythonPath = ".venv/bin/python"
